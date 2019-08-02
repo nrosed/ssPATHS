@@ -27,7 +27,7 @@ get_new_samp_score(gene_weights, expression_matr, run_normalization = TRUE)
 
 }
   \item{run_normalization}{
-   Boolean value. If True, the data will be log-transformed, centered and scaled.
+   Boolean value. If TRUE, the data will be log-transformed, centered and scaled.
    This is recommended since this is done to the reference set when learning the
    gene weights.
 }
