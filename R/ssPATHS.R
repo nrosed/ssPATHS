@@ -127,7 +127,7 @@ get_new_samp_score <- function(gene_weights, expression_matr, run_normalization=
     gene_ids = setdiff(colnames(expression_matr), c("Y", "sample_id"))
     gene_ids = intersect(gene_ids, gene_weights$gene_ids)
 
-    if(length(gene_ids) != gene_weights$gene_ids){
+    if(length(gene_ids) != length(gene_weights$gene_ids)){
         warning("Genes missing in gene_weights or expression_matr")
     }
     # normalize

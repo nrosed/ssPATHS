@@ -14,7 +14,7 @@
  \item{pathway_score}{Float. The estimated hypoxia score for this sample.}
 }}
 \source{
-Derived data
+Derived Data
 }
 \usage{
 data(expected_score_output)
