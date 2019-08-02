@@ -113,7 +113,7 @@ get_classification_accuracy <- function(sample_scores, positive_val){
 
 }
 
-get_new_samp_score <- function(gene_weights, expression_matr, run_normalization=T){
+get_new_samp_score <- function(gene_weights, expression_matr, run_normalization=TRUE){
 
     if(sum(colnames(expression_matr) %in% c("sample_id")) != 1){
         stop("Need column name sample_id")
