@@ -1,7 +1,7 @@
 Package: ssPATHS
 Type: Package
 Title: ssPATHS: Single Sample  PATHway Score
-Version: 0.99.4
+Version: 0.99.5
 Author: Natalie R. Davidson
 Maintainer: Natalie R. Davidson <natalie.davidson@inf.ethz.ch>
 Description: This package generates pathway scores from expression data for
@@ -23,4 +23,5 @@ Suggests:
     plyr,
     testthat (>= 2.1.0)
 RoxygenNote: 6.1.1
-biocViews: Software
+biocViews: Software, GeneExpression, BiomedicalInformatics, RNASeq, Pathways,
+    Transcriptomics, DimensionReduction, Classification
