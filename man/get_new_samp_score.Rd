@@ -9,7 +9,7 @@ Using the gene weights learned from the reference cohort, we apply the
 weightings to new samples to estimate their pathway activity.
 }
 \usage{
-get_new_samp_score(gene_weights, expression_matr, run_normalization = T)
+get_new_samp_score(gene_weights, expression_matr, run_normalization = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
