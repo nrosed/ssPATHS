@@ -38,6 +38,7 @@ Natalie R. Davidson
 
 \examples{
 
+library("SummarizedExperiment")
 
 
 data(tcga_expr_df)
