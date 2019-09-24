@@ -40,9 +40,6 @@ get_gene_weights(expression_se)
 
 \examples{
 
-library("ssPATHS")
-library("SummarizedExperiment")
-
 data(tcga_expr_df)
 
 # transform from data.frame to SummarizedExperiment

@@ -39,9 +39,6 @@ Natalie R. Davidson
 \examples{
 
 
-library("ssPATHS")
-library("SummarizedExperiment")
-
 
 data(tcga_expr_df)
 

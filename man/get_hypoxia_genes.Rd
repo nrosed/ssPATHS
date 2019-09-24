@@ -23,8 +23,6 @@ Natalie R. Davidson
 \examples{
 
 
-library("ssPATHS")
-
 # read in the reference expression data for hypoxia score generation
 data(tcga_expr_df)
 
