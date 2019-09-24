@@ -1,59 +1,47 @@
 test_that("Gene weight on reference dataset works", {
-    library("dml")
-    library("data.table")
-    library("ROCR")
-    library("MESS")
-    library("ggplot2")
-    library("ssPATHS")
-    library("plyr")
 
     data(tcga_expr_df)
 
+    # transform from data.frame to SummarizedExperiment
+    tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]), colData=tcga_expr_df[ , 2:4])
+    colnames(tcga_se) <- tcga_expr_df$tcga_id
 
-    hypoxia_gene_ids = get_hypoxia_genes()
-    hypoxia_gene_ids = intersect(hypoxia_gene_ids, colnames(tcga_expr_df))
-    hypoxia_df = tcga_expr_df[,c("tcga_id", "is_normal", hypoxia_gene_ids)]
+    hypoxia_gene_ids <- get_hypoxia_genes()
+    hypoxia_gene_ids <- intersect(hypoxia_gene_ids, rownames(tcga_se))
+    hypoxia_se <- tcga_se[hypoxia_gene_ids,]
 
-    colnames(hypoxia_df)[1:2] = c("sample_id", "Y")
-    hypoxia_df$Y = 0
-    hypoxia_df$Y[tcga_expr_df$is_normal==TRUE] = 0
-    hypoxia_df$Y[tcga_expr_df$is_normal==FALSE] = 1
+    colData(hypoxia_se)$Y <- ifelse(colData(hypoxia_se)$is_normal, 0, 1)
+    colData(hypoxia_se)$sample_id <- tcga_expr_df$tcga_id
 
     # now we can get the gene weightings
-    res = get_gene_weights(hypoxia_df)
-    gene_weights_test = res[[1]]
-    sample_scores = res[[2]]
+    res <- get_gene_weights(hypoxia_se)
+    gene_weights_test <- res[[1]]
+    sample_scores <- res[[2]]
 
     data("gene_weights_reference")
     expect_equal(gene_weights_test, gene_weights_reference)
 })
 
 test_that("test classification on reference dataset works", {
-    library("dml")
-    library("data.table")
-    library("ROCR")
-    library("MESS")
-    library("ggplot2")
-    library("ssPATHS")
-    library("plyr")
 
     data(tcga_expr_df)
 
+    # transform from data.frame to SummarizedExperiment
+    tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]), colData=tcga_expr_df[ , 2:4])
+    colnames(tcga_se) <- tcga_expr_df$tcga_id
 
-    hypoxia_gene_ids = get_hypoxia_genes()
-    hypoxia_gene_ids = intersect(hypoxia_gene_ids, colnames(tcga_expr_df))
-    hypoxia_df = tcga_expr_df[,c("tcga_id", "is_normal", hypoxia_gene_ids)]
+    hypoxia_gene_ids <- get_hypoxia_genes()
+    hypoxia_gene_ids <- intersect(hypoxia_gene_ids, rownames(tcga_se))
+    hypoxia_se <- tcga_se[hypoxia_gene_ids,]
 
-    colnames(hypoxia_df)[1:2] = c("sample_id", "Y")
-    hypoxia_df$Y = 0
-    hypoxia_df$Y[tcga_expr_df$is_normal==TRUE] = 0
-    hypoxia_df$Y[tcga_expr_df$is_normal==FALSE] = 1
+    colData(hypoxia_se)$Y <- ifelse(colData(hypoxia_se)$is_normal, 0, 1)
+    colData(hypoxia_se)$sample_id <- tcga_expr_df$tcga_id
 
     # now we can get the gene weightings
-    res = get_gene_weights(hypoxia_df)
-    sample_scores = res[[2]]
+    res <- get_gene_weights(hypoxia_se)
+    sample_scores <- res[[2]]
 
-    training_res = get_classification_accuracy(sample_scores, positive_val=1)
+    training_res <- get_classification_accuracy(sample_scores, positive_val=1)
     print(training_res[[2]])
 
     expect_equal(training_res[[2]], 0.91112)
@@ -61,35 +49,34 @@ test_that("test classification on reference dataset works", {
 
 
 test_that("test classification on new dataset works", {
-    library("dml")
-    library("data.table")
-    library("ROCR")
-    library("MESS")
-    library("ggplot2")
-    library("ssPATHS")
-    library("plyr")
 
     data(tcga_expr_df)
 
+    # transform from data.frame to SummarizedExperiment
+    tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]), colData=tcga_expr_df[ , 2:4])
+    colnames(tcga_se) <- tcga_expr_df$tcga_id
 
-    hypoxia_gene_ids = get_hypoxia_genes()
-    hypoxia_gene_ids = intersect(hypoxia_gene_ids, colnames(tcga_expr_df))
-    hypoxia_df = tcga_expr_df[,c("tcga_id", "is_normal", hypoxia_gene_ids)]
+    hypoxia_gene_ids <- get_hypoxia_genes()
+    hypoxia_gene_ids <- intersect(hypoxia_gene_ids, rownames(tcga_se))
+    hypoxia_se <- tcga_se[hypoxia_gene_ids,]
 
-    colnames(hypoxia_df)[1:2] = c("sample_id", "Y")
-    hypoxia_df$Y = 0
-    hypoxia_df$Y[tcga_expr_df$is_normal==TRUE] = 0
-    hypoxia_df$Y[tcga_expr_df$is_normal==FALSE] = 1
+    colData(hypoxia_se)$Y <- ifelse(colData(hypoxia_se)$is_normal, 0, 1)
+    colData(hypoxia_se)$sample_id <- tcga_expr_df$tcga_id
 
     # now we can get the gene weightings
-    res = get_gene_weights(hypoxia_df)
-    gene_weights = res[[1]]
-    sample_scores = res[[2]]
+    res <- get_gene_weights(hypoxia_se)
+    gene_weights <- res[[1]]
+    sample_scores <- res[[2]]
 
     data(new_samp_df)
-    new_score_df_calculated = get_new_samp_score(gene_weights, new_samp_df)
+    new_samp_se <- SummarizedExperiment(t(new_samp_df[ , -(1)]), colData=new_samp_df[ , 1])
+    colnames(colData(new_samp_se)) <- "sample_id"
+
+    new_score_df_calculated <- get_new_samp_score(gene_weights, new_samp_se)
 
     data(expected_score_output)
+    row.names(expected_score_output) <- NULL
+    new_score_df_calculated <- as.data.frame(new_score_df_calculated)
     expect_equal(new_score_df_calculated, expected_score_output)
 
 })
