@@ -26,10 +26,15 @@ Natalie R. Davidson
 # read in the reference expression data for hypoxia score generation
 data(tcga_expr_df)
 
+# transform from data.frame to SummarizedExperiment
+tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]), colData=tcga_expr_df[ , 2:4])
+colnames(tcga_se) <- tcga_expr_df$tcga_id
+colData(tcga_se)$sample_id <- tcga_expr_df$tcga_id
+
 # let's get the expression of hypoxia associated genes
 hypoxia_gene_ids <- get_hypoxia_genes()
-hypoxia_gene_ids <- intersect(hypoxia_gene_ids, colnames(tcga_expr_df))
-hypoxia_df <- tcga_expr_df[,c("tcga_id", "is_normal", hypoxia_gene_ids)]
+hypoxia_gene_ids <- intersect(hypoxia_gene_ids, rownames(tcga_se))
+hypoxia_se <- tcga_se[hypoxia_gene_ids,]
 
 
 }

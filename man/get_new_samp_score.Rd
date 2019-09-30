@@ -19,10 +19,10 @@ get_new_samp_score(gene_weights, expression_se, run_normalization = TRUE)
 
 }
   \item{expression_se}{
-   This is an SummarizedExpression object of the reference samples. Rows are
+   This is an SummarizedExperiment object of the reference samples. Rows are
    genes and columns are samples. The colData object must contain
    Y (whether this is a positive or negative sample),
-   sample_id (unique sample id). All genes in the SummarizedExpression object
+   sample_id (unique sample id). All genes in the SummarizedExperiment object
    are assumed to be genes in the pathway of interest.
 
 }
@@ -53,6 +53,7 @@ data(tcga_expr_df)
 # transform from data.frame to SummarizedExperiment
 tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]), colData=tcga_expr_df[ , 2:4])
 colnames(tcga_se) <- tcga_expr_df$tcga_id
+colData(tcga_se)$sample_id <- tcga_expr_df$tcga_id
 
 # get the genes of interest, here hypoxia genes
 hypoxia_gene_ids <- get_hypoxia_genes()
@@ -61,7 +62,7 @@ hypoxia_se <- tcga_se[hypoxia_gene_ids,]
 
 # label the samples for classification
 colData(hypoxia_se)$Y <- ifelse(colData(hypoxia_se)$is_normal, 0, 1)
-colData(hypoxia_se)$sample_id <- tcga_expr_df$tcga_id
+colData(hypoxia_se)$sample_id <- colData(tcga_se)$sample_id
 
 # now we can get the gene weightings
 res <- get_gene_weights(hypoxia_se)
