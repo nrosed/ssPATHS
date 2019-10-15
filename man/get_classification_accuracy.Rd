@@ -38,13 +38,12 @@ Natalie R. Davidson
 
 \examples{
 
-library("SummarizedExperiment")
-
 
 data(tcga_expr_df)
 
 # transform from data.frame to SummarizedExperiment
-tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]), colData=tcga_expr_df[ , 2:4])
+tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]),
+                                colData=tcga_expr_df[ , 2:4])
 colnames(tcga_se) <- tcga_expr_df$tcga_id
 colData(tcga_se)$sample_id <- tcga_expr_df$tcga_id
 
@@ -53,7 +52,6 @@ hypoxia_gene_ids <- intersect(hypoxia_gene_ids, rownames(tcga_se))
 hypoxia_se <- tcga_se[hypoxia_gene_ids,]
 
 colData(hypoxia_se)$Y <- ifelse(colData(hypoxia_se)$is_normal, 0, 1)
-colData(hypoxia_se)$sample_id <- colData(tcga_se)$sample_id
 
 # now we can get the gene weightings
 res <- get_gene_weights(hypoxia_se)
@@ -64,9 +62,11 @@ training_res <- get_classification_accuracy(sample_scores, positive_val=1)
 print(training_res[[2]])
 
 plot(training_res[[3]], col="orange", ylim=c(0, 1))
-legend(0.1,0.8,c(training_res$auc_pr,"\n"),border="white",cex=1.7,box.col = "white")
+legend(0.1,0.8,c(training_res$auc_pr,"\n"), border="white", cex=1.7,
+        box.col = "white")
 
 plot(training_res[[4]], col="blue", ylim=c(0, 1))
-legend(0.1,0.8,c(training_res$auc_roc,"\n"),border="white",cex=1.7,box.col = "white")
+legend(0.1,0.8,c(training_res$auc_roc,"\n"),border="white",cex=1.7,
+        box.col = "white")
 
 }

@@ -77,7 +77,7 @@ get_gene_weights <- function(expression_se){
 
     }
 
-    proj_vector_df <- data.frame(gene_weight=proj_vector, gene_ids=gene_ids)
+    proj_vector_df <- data.frame(gene_weight=proj_vector, gene_id=gene_ids)
 
     return(list(proj_vector_df, dca_proj))
 
@@ -117,14 +117,14 @@ get_new_samp_score <- function(gene_weights, expression_se, run_normalization=TR
         stop("Need column name sample_id")
     }
 
-    if(sum(colnames(gene_weights) %in% c("gene_weight", "gene_ids")) != 2){
-        stop("Need column names gene_weight and gene_ids")
+    if(sum(colnames(gene_weights) %in% c("gene_weight", "gene_id")) != 2){
+        stop("Need column names gene_weight and gene_id")
     }
     has_Y <- "Y" %in% colnames(colData(expression_se))
 
     gene_ids <- rownames(expression_se)
 
-    if(length(gene_ids) != length(gene_weights$gene_ids)){
+    if(length(gene_ids) != length(gene_weights$gene_id)){
         warning("Genes missing in gene_weights or expression_se")
     }
     # normalize
@@ -139,7 +139,7 @@ get_new_samp_score <- function(gene_weights, expression_se, run_normalization=TR
 
     # format the projection vector
     proj_vector <- gene_weights$gene_weight
-    names(proj_vector) <- gene_weights$gene_ids
+    names(proj_vector) <- gene_weights$gene_id
     proj_vector <- proj_vector[gene_ids]
 
     if(sum(names(proj_vector) != colnames(dca_matr)) > 0){

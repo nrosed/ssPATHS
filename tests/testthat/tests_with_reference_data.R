@@ -3,7 +3,8 @@ test_that("Gene weight on reference dataset works", {
     data(tcga_expr_df)
 
     # transform from data.frame to SummarizedExperiment
-    tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]), colData=tcga_expr_df[ , 2:4])
+    tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]),
+                                    colData=tcga_expr_df[ , 2:4])
     colnames(tcga_se) <- tcga_expr_df$tcga_id
     colData(tcga_se)$sample_id <- tcga_expr_df$tcga_id
 
@@ -13,7 +14,6 @@ test_that("Gene weight on reference dataset works", {
     hypoxia_se <- tcga_se[hypoxia_gene_ids,]
 
     colData(hypoxia_se)$Y <- ifelse(colData(hypoxia_se)$is_normal, 0, 1)
-    colData(hypoxia_se)$sample_id <- colData(tcga_se)$sample_id
 
     # now we can get the gene weightings
     res <- get_gene_weights(hypoxia_se)
@@ -29,7 +29,8 @@ test_that("test classification on reference dataset works", {
     data(tcga_expr_df)
 
     # transform from data.frame to SummarizedExperiment
-    tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]), colData=tcga_expr_df[ , 2:4])
+    tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]),
+                                    colData=tcga_expr_df[ , 2:4])
     colnames(tcga_se) <- tcga_expr_df$tcga_id
     colData(tcga_se)$sample_id <- tcga_expr_df$tcga_id
 
@@ -39,7 +40,6 @@ test_that("test classification on reference dataset works", {
     hypoxia_se <- tcga_se[hypoxia_gene_ids,]
 
     colData(hypoxia_se)$Y <- ifelse(colData(hypoxia_se)$is_normal, 0, 1)
-    colData(hypoxia_se)$sample_id <- colData(tcga_se)$sample_id
 
     # now we can get the gene weightings
     res <- get_gene_weights(hypoxia_se)
@@ -57,7 +57,8 @@ test_that("test classification on new dataset works", {
     data(tcga_expr_df)
 
     # transform from data.frame to SummarizedExperiment
-    tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]), colData=tcga_expr_df[ , 2:4])
+    tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]),
+                                    colData=tcga_expr_df[ , 2:4])
     colnames(tcga_se) <- tcga_expr_df$tcga_id
     colData(tcga_se)$sample_id <- tcga_expr_df$tcga_id
 
@@ -66,7 +67,6 @@ test_that("test classification on new dataset works", {
     hypoxia_se <- tcga_se[hypoxia_gene_ids,]
 
     colData(hypoxia_se)$Y <- ifelse(colData(hypoxia_se)$is_normal, 0, 1)
-    colData(hypoxia_se)$sample_id <- colData(tcga_se)$sample_id
 
     # now we can get the gene weightings
     res <- get_gene_weights(hypoxia_se)
@@ -74,7 +74,8 @@ test_that("test classification on new dataset works", {
     sample_scores <- res[[2]]
 
     data(new_samp_df)
-    new_samp_se <- SummarizedExperiment(t(new_samp_df[ , -(1)]), colData=new_samp_df[ , 1])
+    new_samp_se <- SummarizedExperiment(t(new_samp_df[ , -(1)]),
+                                        colData=new_samp_df[, 1, drop=FALSE])
     colnames(colData(new_samp_se)) <- "sample_id"
 
     new_score_df_calculated <- get_new_samp_score(gene_weights, new_samp_se)

@@ -15,10 +15,11 @@ get_gene_weights(expression_se)
 \arguments{
   \item{expression_se}{
    This is an SummarizedExperiment object of the reference samples. Rows are
-   genes and columns are samples. The colData object must contain
-   Y (whether this is a positive or negative sample),
-   sample_id (unique sample id). All genes in the SummarizedExperiment object
-   are assumed to be genes in the pathway of interest.
+   genes and columns are samples. The colData component must contain columns
+   \code{Y} and \code{sample_id}. The former indicates whether this is a
+   positive or negative sample and the latter is the unique sample id.
+   All genes in the SummarizedExperiment object are assumed to be genes
+   in the pathway of interest.
 }
 }
 
@@ -40,12 +41,11 @@ get_gene_weights(expression_se)
 
 \examples{
 
-library("SummarizedExperiment")
-
 data(tcga_expr_df)
 
 # transform from data.frame to SummarizedExperiment
-tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]), colData=tcga_expr_df[ , 2:4])
+tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]),
+                                colData=tcga_expr_df[ , 2:4])
 colnames(tcga_se) <- tcga_expr_df$tcga_id
 colData(tcga_se)$sample_id <- tcga_expr_df$tcga_id
 
@@ -56,7 +56,6 @@ hypoxia_se <- tcga_se[hypoxia_gene_ids,]
 
 # setup labels for classification
 colData(hypoxia_se)$Y <- ifelse(colData(hypoxia_se)$is_normal, 0, 1)
-colData(hypoxia_se)$sample_id <- colData(tcga_se)$sample_id
 
 # now we can get the gene weightings
 res <- get_gene_weights(hypoxia_se)

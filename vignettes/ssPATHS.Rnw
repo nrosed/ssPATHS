@@ -33,7 +33,7 @@ meaningfully characterized in order to tailor treatments.
 Using our method, ssPATHS, we are able to estimate pathway
 deviations for a single patient, by first learning a discriminative gene
 weighting from a reference cohort. In this vignette, we use TCGA gene expression
-data to learn a weighting on hypoxia-related genes then apply it to pancreatic
+data to learn a weighting on hypoxia-related genes then apply it to PDAC
 cancer cell lines to estimate the level of hypoxia within each sample.
 
 \section{Formatting Data}
@@ -42,7 +42,6 @@ First, we load the appropriate packages we will need.
 <<>>=
 library("ROCR")
 library("ggplot2")
-library("SummarizedExperiment")
 library("ssPATHS")
 @
 
@@ -130,7 +129,8 @@ Now, using the gene weightings learned from the reference set, we can apply
 it to a new sample.
 <<>>=
 data(new_samp_df)
-new_samp_se <- SummarizedExperiment(t(new_samp_df[ , -(1)]), colData=new_samp_df[ , 1])
+new_samp_se <- SummarizedExperiment(t(new_samp_df[ , -(1)]),
+                                    colData=new_samp_df[ , 1, drop=FALSE])
 colnames(colData(new_samp_se)) <- "sample_id"
 
 new_score_df <- get_new_samp_score(gene_weights, new_samp_se)

@@ -27,7 +27,8 @@ Natalie R. Davidson
 data(tcga_expr_df)
 
 # transform from data.frame to SummarizedExperiment
-tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]), colData=tcga_expr_df[ , 2:4])
+tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]),
+                                colData=tcga_expr_df[ , 2:4])
 colnames(tcga_se) <- tcga_expr_df$tcga_id
 colData(tcga_se)$sample_id <- tcga_expr_df$tcga_id
 

@@ -20,10 +20,11 @@ get_new_samp_score(gene_weights, expression_se, run_normalization = TRUE)
 }
   \item{expression_se}{
    This is an SummarizedExperiment object of the reference samples. Rows are
-   genes and columns are samples. The colData object must contain
-   Y (whether this is a positive or negative sample),
-   sample_id (unique sample id). All genes in the SummarizedExperiment object
-   are assumed to be genes in the pathway of interest.
+   genes and columns are samples. The colData component must contain columns
+   \code{Y} and \code{sample_id}. The former indicates whether this is a
+   positive or negative sample and the latter is the unique sample id. All
+   genes in the SummarizedExperiment object are assumed to be genes in the
+   pathway of interest.
 
 }
   \item{run_normalization}{
@@ -46,12 +47,11 @@ Natalie R. Davidson
 
 
 \examples{
-library("SummarizedExperiment")
-
 data(tcga_expr_df)
 
 # transform from data.frame to SummarizedExperiment
-tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]), colData=tcga_expr_df[ , 2:4])
+tcga_se <- SummarizedExperiment(t(tcga_expr_df[ , -(1:4)]),
+                                colData=tcga_expr_df[ , 2:4])
 colnames(tcga_se) <- tcga_expr_df$tcga_id
 colData(tcga_se)$sample_id <- tcga_expr_df$tcga_id
 
@@ -62,7 +62,6 @@ hypoxia_se <- tcga_se[hypoxia_gene_ids,]
 
 # label the samples for classification
 colData(hypoxia_se)$Y <- ifelse(colData(hypoxia_se)$is_normal, 0, 1)
-colData(hypoxia_se)$sample_id <- colData(tcga_se)$sample_id
 
 # now we can get the gene weightings
 res <- get_gene_weights(hypoxia_se)
@@ -71,7 +70,8 @@ sample_scores <- res[[2]]
 
 # get the new data so we can apply our score to it
 data(new_samp_df)
-new_samp_se <- SummarizedExperiment(t(new_samp_df[ , -(1)]), colData=new_samp_df[ , 1])
+new_samp_se <- SummarizedExperiment(t(new_samp_df[ , -(1)]),
+                                    colData=new_samp_df[ , 1, drop=FALSE])
 colnames(colData(new_samp_se)) <- "sample_id"
 
 new_score_df_calculated <- get_new_samp_score(gene_weights, new_samp_se)
