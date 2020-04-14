@@ -69,6 +69,7 @@ get_gene_weights <- function(expression_se){
     lower_score <- mean(dca_proj$pathway_score[dca_proj$Y==0])
     upper_score <- mean(dca_proj$pathway_score[dca_proj$Y==1])
     if(lower_score > upper_score){
+
         proj_vector <- proj_vector * -1
         dca_proj <- dca_data %*% proj_vector
         dca_proj <- data.frame(pathway_score=dca_proj, sample_id=row.names(dca_proj))
